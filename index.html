@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Шамани</title>
+  <meta name="description" content="Персональная мантра по семи вопросам — и практика у свечи под звуки твоей стихии.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c3 6 8 9 8 16a8 8 0 0 1-16 0c0-7 5-10 8-16z' fill='%23F0A84A'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header wrap">
+    <a class="brand" href="index.html"><span class="brand-flame" aria-hidden="true"></span>Шамани</a>
+    <a class="header-link" id="last-link" href="#" hidden>Моя мантра</a>
+  </header>
+
+  <main class="wrap home">
+    <section class="intro">
+      <p class="eyebrow">Персональные мантры</p>
+      <h1>Мантра, сплетённая из&nbsp;твоих слов</h1>
+      <p class="lead">Ответь на семь вопросов — о том, что ты отпускаешь и что зовёшь взамен. Мы соберём мантру с биджа-слогом твоей сферы и откроем её у свечи, под звуки твоей стихии.</p>
+      <ol class="path">
+        <li><span class="path-mark">I</span><div><b>Рассказ</b><span>семь вопросов — по одному на каждую фазу луны</span></div></li>
+        <li><span class="path-mark">II</span><div><b>Плетение</b><span>биджа, отпускание, призыв и последняя строка по времени практики</span></div></li>
+        <li><span class="path-mark">III</span><div><b>Свеча</b><span>огонь в темноте, звуки стихии и 9, 27 или 108 повторений по чёткам</span></div></li>
+      </ol>
+      <a class="text-link" id="sample-link" href="mantra.html">Посмотреть пример мантры</a>
+    </section>
+
+    <section class="rite" aria-labelledby="rite-title">
+      <div class="moons" id="moons" aria-hidden="true"></div>
+      <p class="rite-step" id="rite-step">Вопрос 1 из 7</p>
+
+      <form id="rite-form" novalidate>
+        <h2 class="rite-q" id="rite-title">Как к тебе обращаться?</h2>
+        <p class="rite-hint" id="rite-hint"></p>
+        <div class="rite-body" id="rite-body"></div>
+        <div class="rite-nav">
+          <button type="button" class="btn btn-ghost" id="btn-back">Назад</button>
+          <button type="submit" class="btn btn-primary" id="btn-next">Дальше</button>
+        </div>
+      </form>
+
+      <div class="weaving" id="weaving" hidden>
+        <span class="weaving-flame" aria-hidden="true"></span>
+        <p>Плетём мантру…</p>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <p class="eyebrow">Твоя мантра готова</p>
+        <div class="result-lines" id="result-lines"></div>
+        <p class="result-note" id="result-note"></p>
+        <div class="result-actions">
+          <a class="btn btn-primary" id="btn-open" href="#">Открыть у свечи</a>
+          <button type="button" class="btn btn-ghost" id="btn-copy">Скопировать текст</button>
+          <button type="button" class="btn btn-ghost" id="btn-again">Заново</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p>Мантра — инструмент внимания и намерения. Она не заменяет помощь врача или психолога.</p>
+  </footer>
+
+  <script src="js/mantra.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

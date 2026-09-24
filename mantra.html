@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Твоя мантра · Шамани</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c3 6 8 9 8 16a8 8 0 0 1-16 0c0-7 5-10 8-16z' fill='%23F0A84A'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="page-altar">
+  <header class="site-header wrap">
+    <a class="brand" href="index.html"><span class="brand-flame" aria-hidden="true"></span>Шамани</a>
+    <a class="header-link" href="index.html">Новая мантра</a>
+  </header>
+
+  <main class="wrap altar" id="altar">
+    <div class="altar-head">
+      <p class="eyebrow" id="altar-sphere">Мантра</p>
+      <h1 id="altar-title">Твоя мантра</h1>
+      <p class="altar-intent" id="altar-intent" hidden></p>
+    </div>
+
+    <div class="altar-stage">
+      <canvas id="candle" role="img" aria-label="Свеча в темноте и чётки: каждая бусина — одно повторение"></canvas>
+      <p class="beads-count" id="beads-count" aria-live="polite">0 / 9</p>
+    </div>
+
+    <ol class="mantra-lines" id="mantra-lines"></ol>
+    <p class="bija-note" id="bija-note"></p>
+
+    <div class="altar-controls">
+      <button type="button" class="btn btn-primary btn-light" id="btn-light">Зажечь свечу</button>
+      <div class="controls-row">
+        <label class="control" for="sel-rounds"><span>Повторений</span>
+          <select id="sel-rounds">
+            <option value="9" selected>9</option>
+            <option value="27">27</option>
+            <option value="108">108 — полный круг чёток</option>
+          </select>
+        </label>
+        <label class="control" for="sel-sound"><span>Звук</span>
+          <select id="sel-sound">
+            <option value="water">Вода</option>
+            <option value="wind">Ветер</option>
+            <option value="forest">Лес</option>
+            <option value="fire">Огонь</option>
+            <option value="bowl">Только поющая чаша</option>
+            <option value="silence">Тишина</option>
+          </select>
+        </label>
+        <label class="control" for="vol"><span>Громкость</span>
+          <input type="range" id="vol" min="0" max="1" step="0.05" value="0.7">
+        </label>
+      </div>
+      <div class="controls-row">
+        <label class="toggle" for="chk-voice"><input type="checkbox" id="chk-voice" checked> <span id="voice-label">Голос читает мантру</span></label>
+        <button type="button" class="btn btn-ghost btn-small" id="btn-share">Скопировать ссылку</button>
+      </div>
+    </div>
+    <p class="altar-status" id="altar-status" role="status"></p>
+  </main>
+
+  <section class="wrap altar-empty" id="altar-empty" hidden>
+    <h1>Мантра не найдена</h1>
+    <p>Ссылка неполная или повреждена. Скопируй её целиком или сплети новую мантру.</p>
+    <a class="btn btn-primary" href="index.html">Сплести мантру</a>
+  </section>
+
+  <script src="js/mantra.js"></script>
+  <script src="js/candle.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/altar.js"></script>
+</body>
+</html>
