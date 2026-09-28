@@ -62,11 +62,33 @@
     </section>
   </main>
 
+  <section class="wrap letter" aria-labelledby="letter-title">
+    <div class="letter-card">
+      <div class="letter-copy">
+        <p class="eyebrow">Видео-практика</p>
+        <h2 id="letter-title">Получи видео на почту</h2>
+        <p>Оставь адрес — пришлём ссылку на видео-практику у свечи. Её можно открыть в любой момент, когда захочется практиковать.</p>
+      </div>
+      <form class="letter-form" id="letter-form" novalidate>
+        <label class="visually-hidden" for="letter-email">Электронная почта</label>
+        <input class="field" id="letter-email" name="email" type="email" inputmode="email" autocomplete="email"
+          placeholder="твоя@почта.ru" required maxlength="120">
+        <!-- ловушка для ботов: человек это поле не видит -->
+        <input class="visually-hidden" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button type="submit" class="btn btn-primary" id="letter-send">Прислать ссылку</button>
+        <p class="letter-status" id="letter-status" role="status"></p>
+        <p class="letter-fine">Адрес нужен только для этого письма. Без рассылок и спама.</p>
+      </form>
+    </div>
+  </section>
+
   <footer class="wrap site-footer">
     <p>Мантра — инструмент внимания и намерения. Она не заменяет помощь врача или психолога.</p>
   </footer>
 
   <script src="js/mantra.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/letter.js"></script>
 </body>
 </html>
