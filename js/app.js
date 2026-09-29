@@ -1,4 +1,4 @@
-/* Главная: анкета-обряд из семи вопросов → готовая мантра. */
+/* Главная: анкета-обряд из семи вопросов + почта → заявка на мантру и видео. */
 (() => {
   const opts = (dict) => Object.entries(dict).map(([id, o]) => ({ id, label: o.label, hint: o.hint }));
 
@@ -18,18 +18,22 @@
     { id: 'intention', type: 'textarea', title: 'Скажи своё намерение своими словами',
       hint: 'Одна-две фразы. Они будут рядом с мантрой, пока горит свеча. Можно пропустить.',
       placeholder: 'Например: хочу перестать бояться перемен' },
+    { id: 'email', type: 'email', title: 'Куда прислать мантру?',
+      hint: 'Мантра, музыка и видео будут готовы примерно через пять минут — пришлём ссылку на эту почту.',
+      placeholder: 'твоя@почта.ru' },
   ];
+  const QUESTIONS = STEPS.filter((s) => s.type !== 'email').length;
 
   const $ = (id) => document.getElementById(id);
   const form = $('rite-form'), body = $('rite-body'), moons = $('moons');
   const answers = {};
   let step = 0;
 
-  moons.innerHTML = STEPS.map(() => '<span class="moon"></span>').join('');
+  moons.innerHTML = STEPS.slice(0, QUESTIONS).map(() => '<span class="moon"></span>').join('');
 
   function render() {
     const s = STEPS[step];
-    $('rite-step').textContent = `Вопрос ${step + 1} из ${STEPS.length}`;
+    $('rite-step').textContent = step < QUESTIONS ? `Вопрос ${step + 1} из ${QUESTIONS}` : 'Последний шаг';
     $('rite-title').textContent = s.title;
     $('rite-hint').textContent = s.hint;
     [...moons.children].forEach((m, i) => {
@@ -46,13 +50,17 @@
           </label>`).join('') + '</div>';
     } else {
       const tag = s.type === 'textarea' ? 'textarea' : 'input';
-      body.innerHTML = `<${tag} class="field" id="${s.id}" name="${s.id}" maxlength="${s.type === 'textarea' ? 240 : 40}"
-        placeholder="${s.placeholder}" autocomplete="off"${tag === 'textarea' ? ' rows="3"></textarea>' : ' type="text">'}`;
+      const attrs = s.type === 'email'
+        ? ' type="email" inputmode="email" autocomplete="email" maxlength="120">'
+          + '<input class="visually-hidden" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">'
+          + '<p class="rite-error" id="rite-error" role="alert"></p>'
+        : tag === 'textarea' ? ' autocomplete="off" rows="3" maxlength="240"></textarea>' : ' type="text" autocomplete="off" maxlength="40">';
+      body.innerHTML = `<${tag} class="field" id="${s.id}" name="${s.id}" placeholder="${s.placeholder}"${attrs}`;
       body.querySelector('.field').value = answers[s.id] || '';
     }
 
     $('btn-back').hidden = step === 0;
-    $('btn-next').textContent = step === STEPS.length - 1 ? 'Сплести мантру' : 'Дальше';
+    $('btn-next').textContent = step === STEPS.length - 1 ? 'Оформить заявку' : 'Дальше';
     syncNext();
   }
 
@@ -82,7 +90,7 @@
     const s = STEPS[step];
     if (s.type === 'choice' && !answers[s.id]) return;
     if (step < STEPS.length - 1) { step++; render(); focusStep(); }
-    else weave();
+    else submitOrder();
   }
 
   function focusStep() {
@@ -93,70 +101,43 @@
   form.addEventListener('submit', (e) => { e.preventDefault(); next(); });
   $('btn-back').addEventListener('click', () => { if (step > 0) { step--; render(); focusStep(); } });
 
-  let current = null;
-
-  function weave() {
-    current = Mantra.build(answers);
+  async function submitOrder() {
+    const email = (answers.email || '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+      $('rite-error').textContent = 'Похоже, в адресе опечатка.';
+      body.querySelector('.field').focus();
+      return;
+    }
+    const { email: _, ...rest } = answers;
     form.hidden = true;
     $('rite-step').hidden = true;
     $('weaving').hidden = false;
     [...moons.children].forEach((m) => { m.className = 'moon is-full'; });
-    setTimeout(showResult, 1800);
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, answers: rest, website: form.website ? form.website.value : '' }),
+      });
+      const data = await res.json();
+      if (!data.ok || !data.token) throw new Error(data.error);
+      try { localStorage.setItem('shamani:order', data.token); } catch (e) { /* без хранилища просто не запомним */ }
+      location.href = 'order.html?t=' + encodeURIComponent(data.token);
+    } catch (err) {
+      $('weaving').hidden = true;
+      form.hidden = false;
+      $('rite-step').hidden = false;
+      render();
+      $('rite-error').textContent = 'Не получилось оформить заявку. Попробуй ещё раз.';
+    }
   }
 
-  function showResult() {
-    $('weaving').hidden = true;
-    const link = Mantra.url(current);
-    $('result-lines').innerHTML = current.lines
-      .map((l, i) => `<p class="${i === 0 ? 'bija' : ''}">${escapeHtml(l)}</p>`).join('');
-    $('result-note').textContent = current.note;
-    $('btn-open').href = link;
-    $('result').hidden = false;
-    try { localStorage.setItem('shamani:last', link); } catch (e) { /* без хранилища просто не запомним */ }
-    showLastLink();
-  }
-
-  $('btn-copy').addEventListener('click', async (e) => {
-    const text = current.lines.join('\n');
-    try { await navigator.clipboard.writeText(text); flash(e.target, 'Скопировано'); }
-    catch (err) { selectText($('result-lines')); flash(e.target, 'Выделено — нажми Ctrl+C'); }
-  });
-
-  $('btn-again').addEventListener('click', () => {
-    Object.keys(answers).forEach((k) => delete answers[k]);
-    step = 0;
-    $('result').hidden = true;
-    form.hidden = false;
-    $('rite-step').hidden = false;
-    render();
-    focusStep();
-  });
-
-  function flash(btn, text) {
-    const was = btn.textContent;
-    btn.textContent = text;
-    setTimeout(() => { btn.textContent = was; }, 1800);
-  }
-
-  function selectText(el) {
-    const r = document.createRange();
-    r.selectNodeContents(el);
-    const sel = getSelection();
-    sel.removeAllRanges();
-    sel.addRange(r);
-  }
-
-  function escapeHtml(s) {
-    return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  }
-
-  function showLastLink() {
-    let last = null;
-    try { last = localStorage.getItem('shamani:last'); } catch (e) { /* ignore */ }
-    if (last) { $('last-link').href = last; $('last-link').hidden = false; }
-  }
+  // Последняя заявка — ссылка «Моя заявка» ведёт сразу на неё
+  try {
+    const last = localStorage.getItem('shamani:order');
+    if (last) $('order-link').href = 'order.html?t=' + encodeURIComponent(last);
+  } catch (e) { /* ignore */ }
 
   $('sample-link').href = Mantra.url(Mantra.sample());
-  showLastLink();
   render();
 })();

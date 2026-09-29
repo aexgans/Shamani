@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Моя заявка · Шамани</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3c3 6 8 9 8 16a8 8 0 0 1-16 0c0-7 5-10 8-16z' fill='%23F0A84A'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Forum&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;1,7..72,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header wrap">
+    <a class="brand" href="index.html"><span class="brand-flame" aria-hidden="true"></span>Шамани</a>
+    <a class="header-link" href="index.html">Новая мантра</a>
+  </header>
+
+  <main class="wrap order" id="order">
+    <p class="order-loading" id="order-loading">Открываем заявку…</p>
+
+    <!-- поиск по номеру: когда страницу открыли без личной ссылки -->
+    <section class="order-card" id="view-lookup" hidden>
+      <p class="eyebrow">Моя заявка</p>
+      <h1>Найти заявку</h1>
+      <p class="order-text" id="lookup-text">Номер заявки есть в первом письме — вида SH-123456. Почта — та, что указана в анкете.</p>
+      <form class="lookup" id="lookup-form" novalidate>
+        <label class="control" for="lookup-number"><span>Номер заявки</span>
+          <input class="field" id="lookup-number" placeholder="SH-123456" autocomplete="off" maxlength="12" required>
+        </label>
+        <label class="control" for="lookup-email"><span>Почта</span>
+          <input class="field" id="lookup-email" type="email" inputmode="email" autocomplete="email" placeholder="твоя@почта.ru" maxlength="120" required>
+        </label>
+        <button class="btn btn-primary" type="submit">Найти</button>
+        <p class="rite-error" id="lookup-error" role="alert"></p>
+      </form>
+    </section>
+
+    <!-- ждёт оплаты -->
+    <section class="order-card" id="view-pay" hidden>
+      <p class="eyebrow">Заявка <span data-number></span></p>
+      <h1>Осталось оплатить</h1>
+      <p class="order-text">Ответы сохранены. После оплаты мантра, музыка и видео будут готовы примерно через пять минут — ссылка придёт на почту.</p>
+      <button class="btn btn-primary btn-light" type="button" id="btn-pay">Оплатить</button>
+      <p class="order-fine">Прототип: оплата тестовая, деньги не списываются. Здесь будет переход к платёжному сервису.</p>
+    </section>
+
+    <!-- в очереди / создаётся -->
+    <section class="order-card" id="view-wait" hidden>
+      <p class="eyebrow">Заявка <span data-number></span></p>
+      <span class="weaving-flame" aria-hidden="true"></span>
+      <h1 id="wait-title">Создаём твою мантру</h1>
+      <ol class="stages" id="stages">
+        <li data-stage="paid">Оплата получена</li>
+        <li data-stage="generating">Мантра, музыка и видео создаются</li>
+        <li data-stage="ready">Готово — придёт письмо</li>
+      </ol>
+      <p class="order-text">Обычно это занимает около пяти минут. Страницу можно закрыть: ссылка придёт на почту, а заявку всегда можно найти по номеру.</p>
+    </section>
+
+    <!-- готово -->
+    <section class="ready" id="view-ready" hidden>
+      <div class="ready-head">
+        <p class="eyebrow">Заявка <span data-number></span></p>
+        <h1 id="ready-title">Твоя мантра</h1>
+        <p class="access" id="access"></p>
+      </div>
+      <div class="screen" id="screen" hidden></div>
+      <audio class="ready-audio" id="audio" controls preload="metadata" hidden></audio>
+      <ol class="mantra-lines" id="ready-lines"></ol>
+      <p class="bija-note" id="ready-note"></p>
+      <div class="downloads">
+        <h2>Сохрани себе</h2>
+        <p class="order-text">Через две недели страница закроется, а скачанные файлы останутся с тобой.</p>
+        <ul class="download-list" id="downloads"></ul>
+      </div>
+      <button class="btn btn-ghost btn-small dev-only" type="button" id="btn-expire" hidden>Тест: промотать 14 дней</button>
+    </section>
+
+    <!-- доступ закончился -->
+    <section class="order-card" id="view-expired" hidden>
+      <p class="eyebrow">Заявка <span data-number></span></p>
+      <h1>Доступ закончился</h1>
+      <p class="order-text" id="expired-text">Страница с мантрой была открыта две недели. Если файлы скачаны — они остаются с тобой.</p>
+      <a class="btn btn-primary" href="index.html">Создать новую мантру</a>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p>Мантра — инструмент внимания и намерения. Она не заменяет помощь врача или психолога.</p>
+  </footer>
+
+  <script src="js/order.js"></script>
+</body>
+</html>
